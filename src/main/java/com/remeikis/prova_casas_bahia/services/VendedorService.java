@@ -1,5 +1,6 @@
 package com.remeikis.prova_casas_bahia.services;
 
+import com.remeikis.prova_casas_bahia.models.Filial;
 import com.remeikis.prova_casas_bahia.models.Vendedor;
 import com.remeikis.prova_casas_bahia.models.dto.CreateVendedorDto;
 import com.remeikis.prova_casas_bahia.repositories.VendedorRepository;
@@ -15,6 +16,9 @@ public class VendedorService {
     @Autowired
     private VendedorRepository vendedorRepository;
 
+    @Autowired
+    private FilialService filialService;
+
     public List<Vendedor> findAll() {
         return vendedorRepository.findAll();
     }
@@ -26,6 +30,8 @@ public class VendedorService {
     }
 
     public Vendedor create(CreateVendedorDto vendedorDto) {
+        Filial filial = validateFilial(vendedorDto.getIdFilial());
+
         Vendedor vendedor = new Vendedor(
             null,
             vendedorDto.getNome(),
@@ -33,16 +39,20 @@ public class VendedorService {
             vendedorDto.getIdentificador(),
             vendedorDto.getEmail(),
             vendedorDto.getTipoContratacao(),
-            vendedorDto.getIdFilial()
+            vendedorDto.getIdFilial(),
+            filial
         );
 
         return vendedorRepository.save(vendedor);
     }
 
     public Vendedor update(Vendedor vendedor) {
+        Filial filial = validateFilial(vendedor.getIdFilial());
+
         if(!exists(vendedor)) {
             throw new IllegalArgumentException("Não existe vendedor com matrícula '" + vendedor.getMatricula() + "'");
         }
+        vendedor.setFilial(filial);
         return vendedorRepository.save(vendedor);
     }
 
@@ -59,5 +69,13 @@ public class VendedorService {
         return vendedorRepository
             .findById(vendedor.getMatricula())
             .isPresent();
+    }
+
+    private Filial validateFilial(int idFilial) {
+        Filial filial = filialService.findById(idFilial);
+        if(filial == null) {
+            throw new IllegalArgumentException("Não existe filial com ID " + idFilial);
+        }
+        return filial;
     }
 }

@@ -20,23 +20,26 @@ public class VendedorController {
 
     @GetMapping
     public ResponseEntity<List<Vendedor>> findAll() {
-        return ResponseEntity.ok(
-            vendedorService.findAll()
-        );
+        List<Vendedor> vendedores = vendedorService.findAll();
+        return ResponseEntity.ok(vendedores);
     }
 
     @GetMapping("/{matricula}")
     public ResponseEntity<Vendedor> findByMatricula(@PathVariable String matricula) {
-        return ResponseEntity.ok(
-            vendedorService.findByMatricula(matricula)
-        );
+        Vendedor v = vendedorService.findByMatricula(matricula);
+        return ResponseEntity.ok(v);
     }
 
     @PostMapping
-    public ResponseEntity<Vendedor> create(@RequestBody CreateVendedorDto vendedorDto) {
-        return ResponseEntity.ok(
-            vendedorService.create(vendedorDto)
-        );
+    public ResponseEntity create(@RequestBody CreateVendedorDto vendedorDto) {
+        try {
+            Vendedor v = vendedorService.create(vendedorDto);
+            return ResponseEntity.ok(v);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
+        }
     }
 
     @PutMapping

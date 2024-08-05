@@ -32,7 +32,7 @@ public class Vendedor {
 
     @Column
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    //@DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date dtNascimento;
 
     @Column(nullable = false)
@@ -47,4 +47,7 @@ public class Vendedor {
 
     @Column(nullable = false)
     private int idFilial;
+
+    @Transient
+    private Filial filial;
 }
