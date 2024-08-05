@@ -1,4 +1,4 @@
-package com.remeikis.prova_casas_bahia.models;
+package com.remeikis.prova_casas_bahia.models.enums;
 
 import lombok.Getter;
 

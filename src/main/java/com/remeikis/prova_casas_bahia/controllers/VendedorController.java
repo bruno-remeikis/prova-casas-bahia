@@ -1,8 +1,11 @@
 package com.remeikis.prova_casas_bahia.controllers;
 
 import com.remeikis.prova_casas_bahia.models.Vendedor;
+import com.remeikis.prova_casas_bahia.models.dto.CreateVendedorDto;
 import com.remeikis.prova_casas_bahia.services.VendedorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +25,7 @@ public class VendedorController {
         );
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{matricula}")
     public ResponseEntity<Vendedor> findByMatricula(@PathVariable String matricula) {
         return ResponseEntity.ok(
             vendedorService.findByMatricula(matricula)
@@ -30,16 +33,33 @@ public class VendedorController {
     }
 
     @PostMapping
-    public ResponseEntity<Vendedor> create(@RequestBody Vendedor vendedor) {
+    public ResponseEntity<Vendedor> create(@RequestBody CreateVendedorDto vendedorDto) {
         return ResponseEntity.ok(
-            vendedorService.create(vendedor)
+            vendedorService.create(vendedorDto)
         );
     }
 
     @PutMapping
-    public ResponseEntity<Vendedor> update(@RequestBody Vendedor vendedor) {
-        return ResponseEntity.ok(
-            vendedorService.update(vendedor)
-        );
+    public ResponseEntity update(@RequestBody Vendedor vendedor) {
+        try {
+            Vendedor v = vendedorService.update(vendedor);
+            return ResponseEntity.ok(v);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{matricula}")
+    public ResponseEntity delete(@PathVariable String matricula) {
+        try {
+            Vendedor v = vendedorService.delete(matricula);
+            return ResponseEntity.ok(v);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
+        }
     }
 }

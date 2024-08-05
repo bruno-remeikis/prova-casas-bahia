@@ -1,6 +1,6 @@
 package com.remeikis.prova_casas_bahia.models.dto;
 
-import com.remeikis.prova_casas_bahia.models.TipoContratacao;
+import com.remeikis.prova_casas_bahia.models.enums.TipoContratacao;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +13,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateVendedor {
-
-    private String matricula;
+public class CreateVendedorDto {
 
     private String nome;
 
