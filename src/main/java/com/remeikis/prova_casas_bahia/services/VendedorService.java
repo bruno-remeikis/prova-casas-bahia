@@ -36,16 +36,8 @@ public class VendedorService {
 
         validateIdentificador(vendedorDto.getIdentificador(), vendedorDto.getTipoContratacao());
 
-        Vendedor vendedor = new Vendedor(
-            null,
-            vendedorDto.getNome(),
-            vendedorDto.getDtNascimento(),
-            vendedorDto.getIdentificador(),
-            vendedorDto.getEmail(),
-            vendedorDto.getTipoContratacao(),
-            vendedorDto.getIdFilial(),
-            filial
-        );
+        Vendedor vendedor = castCreateVendedorDtoToVendedor(vendedorDto);
+        vendedor.setFilial(filial);
 
         return vendedorRepository.save(vendedor);
     }
@@ -69,6 +61,19 @@ public class VendedorService {
         }
         vendedorRepository.delete(v);
         return v;
+    }
+
+    public Vendedor castCreateVendedorDtoToVendedor(CreateVendedorDto vendedorDto) {
+        return new Vendedor(
+            null,
+            vendedorDto.getNome(),
+            vendedorDto.getDtNascimento(),
+            vendedorDto.getIdentificador(),
+            vendedorDto.getEmail(),
+            vendedorDto.getTipoContratacao(),
+            vendedorDto.getIdFilial(),
+            null
+        );
     }
 
     private boolean exists(Vendedor vendedor) {
